@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { Switch, Route } from "react-router-dom";
+import { withRouter } from "react-router";
+import VideosList from "./Components/VideosList";
+import { songsList } from "./Data/songsList";
+import Video from "./Components/Video";
 
-function App() {
+const App = ({ location }) => {
+  const list = songsList();
+  const id = location.pathname.slice(1);
+  const currentVideo = id
+    ? list.find((item) => item.link.split("=")[1] === id)
+    : null;
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Switch>
+        <Route exact path="/">
+          <VideosList list={list} />
+        </Route>
+        <Route path="/:id">
+          <Video video={currentVideo} id={id} />
+        </Route>
+      </Switch>
     </div>
   );
-}
+};
 
-export default App;
+export default withRouter(App);
